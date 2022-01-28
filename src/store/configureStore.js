@@ -1,10 +1,18 @@
-import { createStore } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 import reducer from './reducer';
-import { devToolsEnhancer } from 'redux-devtools-extension'
+import logger from './middleware/logger';
 
-
-export default function configureStore(){
-    const store  = createStore(reducer, devToolsEnhancer( {trace : true } ));
-    return store;
+export default function(){
+    return configureStore({
+        reducer,
+        middleware : [logger]
+    });
 }
+
+// export default function configureStore(){
+//     const store  = createStore(reducer,
+//         middleware => [logger],
+//         devToolsEnhancer( {trace : true } ));
+//     return store;
+// }
 
