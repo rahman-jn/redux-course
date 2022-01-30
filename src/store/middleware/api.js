@@ -9,11 +9,10 @@ const api = store => next => async action  => {
 
     next(action);
 
-    const {baseUrl, url, data, method, onSuccess, onError } = action.payload;
+    const {url, data, method, onSuccess, onError } = action.payload;
     
     try{
         const response = await axios.request({
-            baseUrl,
             url,
             method,
             data
