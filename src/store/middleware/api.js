@@ -1,11 +1,14 @@
 import axios from 'axios';
 import * as actions from '../api';
+import { bugsRequested } from '../bugs';
 
 
 const api = store => next => async action  => {
 
 
     if(action.type !== actions.apiCallBegin.type ) return next(action);
+
+    store.dispatch(bugsRequested());
 
     next(action);
 
