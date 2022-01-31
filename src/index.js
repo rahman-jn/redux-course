@@ -10,3 +10,8 @@ const store = configureStore();
 
 
 store.dispatch(callBug());
+
+//store.dispatch(callBug());
+
+
+setTimeout(() => store.dispatch(callBug()), 2000 );
