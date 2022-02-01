@@ -26,6 +26,7 @@ const slice = createSlice({
         },
         bugResolved(bugs, action){
             const bugId = bugs.list.findIndex( bug => bug.id === action.payload.id );
+            console.log(bugId);
             bugs.list[bugId].resolved = true;
         },
         bugAssignedToUser( bugs, action){
@@ -47,7 +48,7 @@ const url = 'http://localhost:9001/api/bugs';
 export const callBug = () => (dispatch, getState) =>{
     const { lastFetch } = getState().entities.bugs;
     const diffMinutes = moment().diff(moment(lastFetch), "minutes");
-    if(diffMinutes < 10) return;
+    //if(diffMinutes < 10) return;
 
     dispatch(
         apiCallBegin({
@@ -62,6 +63,21 @@ export const addBug = bug => apiCallBegin({
     method : "post",
     data : bug,
     onSuccess : bugAdded.type,
+})
+
+export const resolveBug = id => apiCallBegin({
+    url : url + '/' + id,
+    method : 'patch',
+    data : {resolved : true },
+    onSuccess : bugResolved.type
+})
+
+
+export const assignBug = (bugId, userId) => apiCallBegin({
+    url : url + '/' + id,
+    method : 'patch',
+    data : {bugId : bugId, userId : userId },
+    onSuccess : bugAssignedToUser.type
 })
 
 export const unResolvedBugs = createSelector(
