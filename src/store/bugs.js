@@ -4,9 +4,6 @@ import { createSelector } from 'reselect';
 import { apiCallBegin } from './api';
 import moment from 'moment';
 
-//Last id initialiising
-let lastId = 0; 
-
 const slice = createSlice({
     name : "bugs",
     initialState : {
@@ -24,11 +21,7 @@ const slice = createSlice({
             bugs.lastFetch = Date.now();
         },
         bugAdded(bugs, action) {
-            bugs.list.push({
-                    id : ++lastId,
-                    description : action.payload.description,
-                    resolved : false
-            })
+            bugs.list.push(action.payload)
 
         },
         bugResolved(bugs, action){
@@ -52,20 +45,24 @@ export default slice.reducer;
 const url = 'http://localhost:9001/api/bugs';
 
 export const callBug = () => (dispatch, getState) =>{
-    console.log("HI");
     const { lastFetch } = getState().entities.bugs;
     const diffMinutes = moment().diff(moment(lastFetch), "minutes");
-    console.log(diffMinutes);
     if(diffMinutes < 10) return;
 
     dispatch(
         apiCallBegin({
         url,
         onSuccess : bugsRecieved.type,
-        onStart : bugsRequested.type
 })
 );
-}
+};
+
+export const addBug = bug => apiCallBegin({
+    url,
+    method : "post",
+    data : bug,
+    onSuccess : bugAdded.type,
+})
 
 export const unResolvedBugs = createSelector(
     state => state.entities.bugs,
